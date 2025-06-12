@@ -4,16 +4,28 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { Menu as MenuIcon, X as CloseIcon } from 'lucide-react';
 
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/timeline', label: 'Linha do Tempo' },
+  { href: '/playlist', label: 'Playlist' },
+  { href: '/abraquando', label: 'Abra Quando...' },
+  { href: '/mensagem', label: 'Mensagem Final' },
+];
+
 const Menu = styled.nav`
   position: fixed;
   top: 0;
   width: 100%;
+  height: 60px;
   background: linear-gradient(90deg, #5a3e24, #3e2a15);
   border-bottom: 3px solid var(--color-accent);
-  padding: 0.75rem 2rem;
   font-family: 'Cormorant Garamond', serif;
   z-index: 1000;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
 `;
 
 const MenuLink = styled(Link)`
@@ -32,7 +44,6 @@ const MenuLink = styled(Link)`
 
 const DesktopMenu = styled.div`
   display: flex;
-  justify-content: center;
   gap: 2rem;
 
   @media (max-width: 768px) {
@@ -45,14 +56,11 @@ const MobileMenuButton = styled.button`
 
   @media (max-width: 768px) {
     display: block;
-    position: absolute;
-    top: 0.75rem;
-    right: 1.5rem;
     background: none;
     border: none;
     color: var(--color-text);
-    font-size: 2rem;
     cursor: pointer;
+    z-index: 1100;
   }
 `;
 
@@ -64,42 +72,38 @@ const MobileMenu = styled.div<{ $open: boolean }>`
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-top: 1rem;
-    padding-bottom: 1rem;
+    padding: 1rem 0;
+    background: linear-gradient(180deg, #3e2a15, #5a3e24);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
     border-top: 1px solid var(--color-accent);
   }
 `;
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/timeline', label: 'Linha do Tempo' },
-  { href: '/playlist', label: 'Playlist' },
-  { href: '/abraquando', label: 'Abra Quando...' },
-  { href: '/mensagem', label: 'Mensagem Final' },
-];
-
 export default function TopMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const toggleMenu = () => setMenuOpen(prev => !prev);
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <Menu>
-      <DesktopMenu>
-        {navLinks.map(({ href, label }) => (
-          <MenuLink key={href} href={href}>
-            {label}
-          </MenuLink>
-        ))}
-      </DesktopMenu>
+    <>
+      <Menu>
+        <DesktopMenu>
+          {navLinks.map(({ href, label }) => (
+            <MenuLink key={href} href={href}>{label}</MenuLink>
+          ))}
+        </DesktopMenu>
 
-      <MobileMenuButton
-        onClick={toggleMenu}
-        aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
-        aria-expanded={menuOpen}
-      >
-        {menuOpen ? <CloseIcon size={28} /> : <MenuIcon size={28} />}
-      </MobileMenuButton>
+        <MobileMenuButton
+          onClick={toggleMenu}
+          aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? <CloseIcon size={28} /> : <MenuIcon size={28} />}
+        </MobileMenuButton>
+      </Menu>
 
       <MobileMenu $open={menuOpen}>
         {navLinks.map(({ href, label }) => (
@@ -108,6 +112,6 @@ export default function TopMenu() {
           </MenuLink>
         ))}
       </MobileMenu>
-    </Menu>
+    </>
   );
 }
