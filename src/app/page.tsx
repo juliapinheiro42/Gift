@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -14,33 +13,23 @@ const Container = styled.div`
   font-family: var(--font-medieval), serif;
   text-align: center;
   padding: 2rem;
-  overflow-x: hidden;
-
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-  }
-
-  @media (max-width: 480px) {
-    padding: 1rem;
-  }
 `;
 
-const StyledImageWrapper = styled.div`
-  position: relative;
-  width: 320px;
-  height: 400px;
+const Photo = styled.img<{ loaded: boolean }>`
+  width: auto;
+  max-width: 90%;
+  max-height: 300px;
+  border: 4px solid var(--color-accent);
+  border-radius: 12px;
   margin-bottom: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  object-fit: cover;
+  opacity: ${({ loaded }) => (loaded ? 1 : 0)};
+  transform: ${({ loaded }) => (loaded ? 'scale(1)' : 'scale(1.05)')};
+  transition: opacity 0.8s ease, transform 0.8s ease;
 
   @media (max-width: 480px) {
-    width: 240px;
-    height: 300px;
-  }
-
-  img {
-    border: 4px solid var(--color-accent);
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-    object-fit: cover;
+    max-height: 220px;
   }
 `;
 
@@ -58,8 +47,24 @@ const Timer = styled.h2`
   }
 `;
 
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid var(--color-accent);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: ${spin} 1s linear infinite;
+  margin: auto;
+`;
+
 export default function Home() {
   const [time, setTime] = useState('');
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const startDate = new Date('2024-12-06T00:00:00');
@@ -69,9 +74,9 @@ export default function Home() {
       const diff = now.getTime() - startDate.getTime();
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-      const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
-      const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
 
       setTime(`${days} dias e ${hours}:${minutes}:${seconds}`);
     };
@@ -83,17 +88,27 @@ export default function Home() {
 
   return (
     <Container>
-      <StyledImageWrapper>
-        <Image
-          src="/Us.jpeg"
-  alt="Foto do casal"
-  width={300}
-  height={400}
-  style={{ borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.6)' }}
-  priority
-        />
-      </StyledImageWrapper>
-      <Timer>Te amo há {time} ❤️</Timer>
+      {!loaded ? (
+        <Spinner />
+      ) : (
+        <>
+          <Photo
+            src="/Us.jpeg"
+            alt="Foto do casal"
+            onLoad={() => setLoaded(true)}
+            loaded={loaded}
+          />
+          <Timer>Te amo há {time} ❤️</Timer>
+        </>
+      )}
+
+      {/* Pré-carrega a imagem para detectar o load */}
+      <img
+        src="/Us.jpeg"
+        alt=""
+        style={{ display: 'none' }}
+        onLoad={() => setLoaded(true)}
+      />
     </Container>
   );
 }
