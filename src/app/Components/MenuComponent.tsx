@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { Menu as MenuIcon, X as CloseIcon } from 'lucide-react';
@@ -85,6 +85,11 @@ const MenuLink = styled(Link)`
 `;
 
 export default function TopMenu() {
+  const [isClient, setIsClient] = useState(false);
+
+useEffect(() => {
+  setIsClient(true);
+}, []);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen(prev => !prev);
@@ -106,13 +111,15 @@ export default function TopMenu() {
         {menuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
       </MobileMenuButton>
 
-      <MobileMenu $open={menuOpen}>
-        {navLinks.map(({ href, label }) => (
-          <MenuLink key={href} href={href} onClick={closeMenu}>
-            {label}
-          </MenuLink>
-        ))}
-      </MobileMenu>
+      {isClient && (
+  <MobileMenu $open={menuOpen}>
+    {navLinks.map(({ href, label }) => (
+      <MenuLink key={href} href={href} onClick={closeMenu}>
+        {label}
+      </MenuLink>
+    ))}
+  </MobileMenu>
+)}
     </Menu>
   );
 }
