@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { MedievalSharp } from "next/font/google";
-import  TopMenu  from '../app/Components/MenuComponent';
+import TopMenu from "../app/Components/MenuComponent";
+import { StyledComponentsRegistry } from "./lib/registry"; 
 import "./globals.css";
 
 const medievalFont = MedievalSharp({
@@ -22,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={medievalFont.variable}>
-        <TopMenu></TopMenu>
-        {children}
+        <StyledComponentsRegistry>
+          <TopMenu />
+          {children}
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
