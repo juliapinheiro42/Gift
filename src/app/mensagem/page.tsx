@@ -22,12 +22,11 @@ const Message = styled.h1`
 `;
 
 const ButtonGroup = styled.div`
-  display: flex;
-  gap: 2rem;
   position: relative;
-  flex-wrap: wrap;
-  justify-content: center;
-  height: 150px;
+  width: 100%;
+  max-width: 360px;
+  height: 160px; /* altura fixa para o botão "Não" se mover */
+  margin: 0 auto;
 `;
 
 const Button = styled.button`
@@ -39,7 +38,8 @@ const Button = styled.button`
   font-family: var(--font-medieval), serif;
   border-radius: 12px;
   cursor: pointer;
-  transition: none;
+  z-index: 1;
+  position: relative;
 
   &:hover {
     background-color: #b30030;
@@ -50,7 +50,7 @@ const NoButton = styled(Button)<{ position: { x: number; y: number } }>`
   position: absolute;
   left: ${({ position }) => position.x}px;
   top: ${({ position }) => position.y}px;
-  pointer-events: auto;
+  z-index: 2;
 `;
 
 export default function MensagemFinalPage() {
@@ -58,14 +58,14 @@ export default function MensagemFinalPage() {
   const [showResponse, setShowResponse] = useState(false);
 
   const moveNoButton = () => {
-    const containerWidth = 300;
-    const containerHeight = 100;
+  const maxX = 260; // dentro da largura da área
+  const maxY = 100;
 
-    const x = Math.floor(Math.random() * containerWidth - containerWidth / 2);
-    const y = Math.floor(Math.random() * containerHeight - containerHeight / 2);
+  const x = Math.floor(Math.random() * maxX);
+  const y = Math.floor(Math.random() * maxY);
 
-    setNoPosition({ x, y });
-  };
+  setNoPosition({ x, y });
+};
 
   const handleYesClick = () => {
     setShowResponse(true);

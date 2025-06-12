@@ -14,6 +14,7 @@ const Container = styled.div`
   font-family: var(--font-medieval), serif;
   text-align: center;
   padding: 2rem;
+  overflow-x: hidden;
 
   @media (max-width: 768px) {
     padding: 1.5rem;
@@ -85,10 +86,11 @@ export default function Home() {
       <StyledImageWrapper>
         <Image
           src="/Us.jpeg"
-          alt="Foto do casal"
-          fill
-          sizes="(max-width: 480px) 240px, 320px"
-          priority
+  alt="Foto do casal"
+  width={300}
+  height={400}
+  style={{ borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.6)' }}
+  priority
         />
       </StyledImageWrapper>
       <Timer>Te amo há {time} ❤️</Timer>
