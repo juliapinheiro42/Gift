@@ -21,18 +21,18 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 480px; /* previne layout shift */
 `;
 
 const Photo = styled.img`
   width: 100%;
+  max-width: 320px;
   height: auto;
-  aspect-ratio: 1;
   border: 4px solid var(--color-accent);
   border-radius: 12px;
   margin-bottom: 2rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   object-fit: cover;
-  background: rgba(0, 0, 0, 0.1); /* Placeholder color */
 `;
 
 const Timer = styled.h2`
@@ -43,7 +43,7 @@ const Timer = styled.h2`
   border: 2px solid var(--color-secondary);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   width: 100%;
-  min-height: 80px; /* Altura fixa para evitar layout shift */
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,7 +69,6 @@ export default function Home() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const startDate = useMemo(() => new Date('2024-12-06T00:00:00'), []);
 
-  // Otimização: Pré-carrega a imagem imediatamente
   useEffect(() => {
     const img = new Image();
     img.src = "/Us.jpeg";
@@ -108,7 +107,7 @@ export default function Home() {
               loading="eager"
               decoding="sync"
             />
-            <Timer> Te amo há {time}</Timer>
+            <Timer>Te amo há {time}</Timer>
           </>
         )}
       </ContentWrapper>
