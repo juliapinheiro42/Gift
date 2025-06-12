@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -13,50 +12,36 @@ const navLinks = [
   { href: '/mensagem', label: 'Mensagem Final' },
 ];
 
-const Wrapper = styled.nav`
+const Menu = styled.nav`
   position: fixed;
   top: 0;
   width: 100%;
-  background: #5a3e24;
-  border-bottom: 3px solid #f7c59f;
+  background: linear-gradient(90deg, #5a3e24, #3e2a15);
+  border-bottom: 3px solid var(--color-accent, #ffc0cb);
   padding: 0.75rem 2rem;
-  font-family: var(--font-medieval), serif;
+  font-family: 'Cormorant Garamond', serif;
   z-index: 1000;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const Links = styled.div<{ mobile?: boolean }>`
-  display: ${({ mobile }) => (mobile ? 'flex' : 'none')};
-  flex-direction: column;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: #5a3e24;
-  padding: 1rem 2rem;
+const DesktopMenu = styled.div`
+  display: flex;
+  gap: 2rem;
 
-  & > a {
-    margin-bottom: 1rem;
-  }
-
-  @media (min-width: 769px) {
-    display: ${({ mobile }) => (mobile ? 'none' : 'flex')};
-    flex-direction: row;
-    gap: 2rem;
-    position: static;
-    background: none;
-    padding: 0;
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
-const Button = styled.button`
+const MobileMenuButton = styled.button`
   display: none;
   background: none;
   border: none;
-  color: #fff;
+  color: var(--color-text, #fff);
   cursor: pointer;
 
   @media (max-width: 768px) {
@@ -64,43 +49,70 @@ const Button = styled.button`
   }
 `;
 
-const StyledLink = styled(Link)`
-  color: #fff;
+const MobileMenu = styled.div<{ $open: boolean }>`
+  display: ${({ $open }) => ($open ? 'flex' : 'none')};
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, #5a3e24, #3e2a15);
+  padding: 1rem 2rem;
+  gap: 1rem;
+  border-top: 1px solid var(--color-accent, #ffc0cb);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
+
+const MenuLink = styled(Link)`
+  color: var(--color-text, #fff);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: #f7c59f;
+    background-color: var(--color-accent, #ffc0cb);
     color: #3e1f27;
+  }
+
+  &, &:visited, &:active {
+    color: var(--color-text, #fff);
   }
 `;
 
 export default function TopMenu() {
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen(prev => !prev);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <Wrapper>
-      <div />
-      <Links mobile={false}>
+    <Menu>
+      <DesktopMenu>
         {navLinks.map(({ href, label }) => (
-          <StyledLink key={href} href={href}>
-            {label}
-          </StyledLink>
+          <MenuLink key={href} href={href}>{label}</MenuLink>
         ))}
-      </Links>
-      <Button onClick={() => setOpen((o) => !o)}>
-        {open ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
-      </Button>
-      {open && (
-        <Links mobile>
-          {navLinks.map(({ href, label }) => (
-            <StyledLink key={href} href={href} onClick={() => setOpen(false)}>
-              {label}
-            </StyledLink>
-          ))}
-        </Links>
-      )}
-    </Wrapper>
+      </DesktopMenu>
+
+      <MobileMenuButton
+        onClick={toggleMenu}
+        aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+        aria-expanded={menuOpen}
+      >
+        {menuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
+      </MobileMenuButton>
+
+      <MobileMenu $open={menuOpen}>
+        {navLinks.map(({ href, label }) => (
+          <MenuLink key={href} href={href} onClick={closeMenu}>
+            {label}
+          </MenuLink>
+        ))}
+      </MobileMenu>
+    </Menu>
   );
 }
