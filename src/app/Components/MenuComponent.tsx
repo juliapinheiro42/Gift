@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { Menu as MenuIcon, X as CloseIcon } from 'lucide-react';
@@ -16,6 +16,20 @@ const Menu = styled.nav`
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
 `;
 
+const MenuLink = styled(Link)`
+  color: var(--color-text);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: var(--color-accent);
+    color: #3e1f27;
+    box-shadow: 0 0 8px var(--color-accent);
+  }
+`;
+
 const DesktopMenu = styled.div`
   display: flex;
   justify-content: center;
@@ -28,17 +42,17 @@ const DesktopMenu = styled.div`
 
 const MobileMenuButton = styled.button`
   display: none;
-  background: none;
-  border: none;
-  color: var(--color-text);
-  font-size: 2rem;
-  cursor: pointer;
 
   @media (max-width: 768px) {
     display: block;
     position: absolute;
     top: 0.75rem;
     right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 2rem;
+    cursor: pointer;
   }
 `;
 
@@ -56,68 +70,43 @@ const MobileMenu = styled.div<{ $open: boolean }>`
   }
 `;
 
-const MenuLink = styled(Link)`
-  color: var(--color-text);
-  text-decoration: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: var(--color-accent);
-    color: #3e1f27;
-    box-shadow: 0 0 8px var(--color-accent);
-  }
-`;
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/timeline', label: 'Linha do Tempo' },
+  { href: '/playlist', label: 'Playlist' },
+  { href: '/abraquando', label: 'Abra Quando...' },
+  { href: '/mensagem', label: 'Mensagem Final' },
+];
 
 export default function TopMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const toggleMenu = () => setMenuOpen((prev) => !prev);
-
-  if (!isMounted) {
-    return (
-      <Menu>
-        <DesktopMenu>
-          <Link href="/">Home</Link>
-          <a href="/timeline">Linha do Tempo</a>
-          <a href="/playlist">Playlist</a>
-          <a href="/abraquando">Abra Quando...</a>
-          <a href="/mensagem">Mensagem Final</a>
-        </DesktopMenu>
-      </Menu>
-    );
-  }
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <Menu>
       <DesktopMenu>
-        <MenuLink href="/">Home</MenuLink>
-        <MenuLink href="/timeline">Linha do Tempo</MenuLink>
-        <MenuLink href="/playlist">Playlist</MenuLink>
-        <MenuLink href="/abraquando">Abra Quando...</MenuLink>
-        <MenuLink href="/mensagem">Mensagem Final</MenuLink>
+        {navLinks.map(({ href, label }) => (
+          <MenuLink key={href} href={href}>
+            {label}
+          </MenuLink>
+        ))}
       </DesktopMenu>
 
-      <MobileMenuButton 
+      <MobileMenuButton
         onClick={toggleMenu}
-        aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+        aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
         aria-expanded={menuOpen}
       >
         {menuOpen ? <CloseIcon size={28} /> : <MenuIcon size={28} />}
       </MobileMenuButton>
 
       <MobileMenu $open={menuOpen}>
-        <MenuLink href="/" onClick={() => setMenuOpen(false)}>Home</MenuLink>
-        <MenuLink href="/timeline" onClick={() => setMenuOpen(false)}>Linha do Tempo</MenuLink>
-        <MenuLink href="/playlist" onClick={() => setMenuOpen(false)}>Playlist</MenuLink>
-        <MenuLink href="/abraquando" onClick={() => setMenuOpen(false)}>Abra Quando...</MenuLink>
-        <MenuLink href="/mensagem" onClick={() => setMenuOpen(false)}>Mensagem Final</MenuLink>
+        {navLinks.map(({ href, label }) => (
+          <MenuLink key={href} href={href} onClick={closeMenu}>
+            {label}
+          </MenuLink>
+        ))}
       </MobileMenu>
     </Menu>
   );

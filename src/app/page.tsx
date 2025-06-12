@@ -37,7 +37,7 @@ const Photo = styled.img`
   height: auto;
   border: 4px solid var(--color-accent);
   border-radius: 12px;
-  margin-bottom: 2rem;
+  margin: 2rem 0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   object-fit: cover;
 `;
