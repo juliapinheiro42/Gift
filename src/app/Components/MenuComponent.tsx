@@ -17,13 +17,15 @@ const Menu = styled.nav`
   top: 0;
   width: 100%;
   background: linear-gradient(90deg, #5a3e24, #3e2a15);
-  border-bottom: 3px solid var(--color-accent);
+  border-bottom: 3px solid var(--color-accent, #ffc0cb);
   padding: 0.75rem 2rem;
   font-family: 'Cormorant Garamond', serif;
   z-index: 1000;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const DesktopMenu = styled.div`
@@ -39,13 +41,8 @@ const MobileMenuButton = styled.button`
   display: none;
   background: none;
   border: none;
-  color: var(--color-text);
+  color: var(--color-text, #fff);
   cursor: pointer;
-  position: absolute;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1001;
 
   @media (max-width: 768px) {
     display: block;
@@ -62,7 +59,7 @@ const MobileMenu = styled.div<{ $open: boolean }>`
   background: linear-gradient(90deg, #5a3e24, #3e2a15);
   padding: 1rem 2rem;
   gap: 1rem;
-  border-top: 1px solid var(--color-accent);
+  border-top: 1px solid var(--color-accent, #ffc0cb);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 
   @media (min-width: 769px) {
@@ -71,20 +68,19 @@ const MobileMenu = styled.div<{ $open: boolean }>`
 `;
 
 const MenuLink = styled(Link)`
-  color: var(--color-text);
+  color: var(--color-text, #fff);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: var(--color-accent);
+    background-color: var(--color-accent, #ffc0cb);
     color: #3e1f27;
   }
 
-  /* Garante que os links não herdem cores do navegador */
   &, &:visited, &:active {
-    color: var(--color-text);
+    color: var(--color-text, #fff);
   }
 `;
 
