@@ -22,11 +22,12 @@ const Menu = styled.nav`
   font-family: 'Cormorant Garamond', serif;
   z-index: 1000;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
 `;
 
 const DesktopMenu = styled.div`
   display: flex;
-  justify-content: center;
   gap: 2rem;
 
   @media (max-width: 768px) {
@@ -39,43 +40,46 @@ const MobileMenuButton = styled.button`
   background: none;
   border: none;
   color: var(--color-text);
-  font-size: 2rem;
   cursor: pointer;
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
 
   @media (max-width: 768px) {
     display: block;
-    position: absolute;
-    top: 0.75rem;
-    right: 1.5rem;
   }
 `;
 
 const MobileMenu = styled.div<{ $open: boolean }>`
-  display: none;
+  display: ${({ $open }) => ($open ? 'flex' : 'none')};
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, #5a3e24, #3e2a15);
+  padding: 1rem 2rem;
+  gap: 1rem;
+  border-top: 1px solid var(--color-accent);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 
-  @media (max-width: 768px) {
-    display: ${({ $open }) => ($open ? 'flex' : 'none')};
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-    padding-bottom: 1rem;
-    border-top: 1px solid var(--color-accent);
-    background: linear-gradient(90deg, #5a3e24, #3e2a15);
+  @media (min-width: 769px) {
+    display: none;
   }
 `;
 
 const MenuLink = styled(Link)`
   color: var(--color-text);
   text-decoration: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 
   &:hover {
     background-color: var(--color-accent);
     color: #3e1f27;
-    box-shadow: 0 0 8px var(--color-accent);
   }
 
   /* Garante que os links não herdem cores do navegador */
@@ -103,7 +107,7 @@ export default function TopMenu() {
         aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
         aria-expanded={menuOpen}
       >
-        {menuOpen ? <CloseIcon size={28} /> : <MenuIcon size={28} />}
+        {menuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
       </MobileMenuButton>
 
       <MobileMenu $open={menuOpen}>
