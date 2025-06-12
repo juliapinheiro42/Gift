@@ -15,7 +15,7 @@ const Container = styled.div`
   padding: 2rem;
 `;
 
-const Photo = styled.img<{ loaded: boolean }>`
+const Photo = styled.img`
   width: auto;
   max-width: 90%;
   max-height: 300px;
@@ -24,9 +24,6 @@ const Photo = styled.img<{ loaded: boolean }>`
   margin-bottom: 2rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   object-fit: cover;
-  opacity: ${({ loaded }) => (loaded ? 1 : 0)};
-  transform: ${({ loaded }) => (loaded ? 'scale(1)' : 'scale(1.05)')};
-  transition: opacity 0.8s ease, transform 0.8s ease;
 
   @media (max-width: 480px) {
     max-height: 220px;
@@ -59,12 +56,11 @@ const Spinner = styled.div`
   width: 60px;
   height: 60px;
   animation: ${spin} 1s linear infinite;
-  margin: auto;
 `;
 
 export default function Home() {
   const [time, setTime] = useState('');
-  const [loaded, setLoaded] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const startDate = new Date('2024-12-06T00:00:00');
@@ -88,26 +84,21 @@ export default function Home() {
 
   return (
     <Container>
-      {!loaded ? (
+      {!imageLoaded ? (
         <Spinner />
       ) : (
         <>
-          <Photo
-            src="/Us.jpeg"
-            alt="Foto do casal"
-            onLoad={() => setLoaded(true)}
-            loaded={loaded}
-          />
+          <Photo src="/Us.jpeg" alt="Foto do casal" />
           <Timer>Te amo há {time} ❤️</Timer>
         </>
       )}
 
-      {/* Pré-carrega a imagem para detectar o load */}
+      {/* pré-carregando imagem */}
       <img
         src="/Us.jpeg"
         alt=""
         style={{ display: 'none' }}
-        onLoad={() => setLoaded(true)}
+        onLoad={() => setImageLoaded(true)}
       />
     </Container>
   );
