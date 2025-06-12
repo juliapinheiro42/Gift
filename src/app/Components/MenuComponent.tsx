@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { Menu as MenuIcon, X as CloseIcon } from 'lucide-react';
@@ -7,20 +7,18 @@ import { Menu as MenuIcon, X as CloseIcon } from 'lucide-react';
 const Menu = styled.nav`
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   background: linear-gradient(90deg, #5a3e24, #3e2a15);
   border-bottom: 3px solid var(--color-accent);
   padding: 0.75rem 2rem;
   font-family: 'Cormorant Garamond', serif;
   z-index: 1000;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
 `;
 
 const DesktopMenu = styled.div`
   display: flex;
+  justify-content: center;
   gap: 2rem;
 
   @media (max-width: 768px) {
@@ -32,56 +30,69 @@ const MobileMenuButton = styled.button`
   display: none;
   background: none;
   border: none;
-  color: white;
+  color: var(--color-text);
+  font-size: 2rem;
   cursor: pointer;
-  position: absolute;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
 
   @media (max-width: 768px) {
     display: block;
+    position: absolute;
+    top: 0.75rem;
+    right: 1.5rem;
   }
 `;
 
-const MobileMenu = styled.div<{ open: boolean }>`
-  display: ${({ open }) => (open ? 'flex' : 'none')};
-  flex-direction: column;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: linear-gradient(90deg, #5a3e24, #3e2a15);
-  padding: 1rem 2rem;
-  gap: 1rem;
-  border-top: 1px solid var(--color-accent);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+const MobileMenu = styled.div<{ $open: boolean }>`
+  display: none;
 
-  @media (min-width: 769px) {
-    display: none;
+  @media (max-width: 768px) {
+    display: ${({ $open }) => ($open ? 'flex' : 'none')};
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-bottom: 1rem;
+    border-top: 1px solid var(--color-accent);
   }
 `;
 
 const MenuLink = styled(Link)`
-  color: white;
+  color: var(--color-text);
   text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 
   &:hover {
     background-color: var(--color-accent);
     color: #3e1f27;
-  }
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-    text-align: center;
+    box-shadow: 0 0 8px var(--color-accent);
   }
 `;
 
 export default function TopMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+  if (!isMounted) {
+    return (
+      <Menu>
+        <DesktopMenu>
+          <a href="/">Home</a>
+          <a href="/timeline">Linha do Tempo</a>
+          <a href="/playlist">Playlist</a>
+          <a href="/abraquando">Abra Quando...</a>
+          <a href="/mensagem">Mensagem Final</a>
+        </DesktopMenu>
+      </Menu>
+    );
+  }
 
   return (
     <Menu>
@@ -94,13 +105,14 @@ export default function TopMenu() {
       </DesktopMenu>
 
       <MobileMenuButton 
-        onClick={() => setMenuOpen(!menuOpen)}
+        onClick={toggleMenu}
         aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+        aria-expanded={menuOpen}
       >
-        {menuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
+        {menuOpen ? <CloseIcon size={28} /> : <MenuIcon size={28} />}
       </MobileMenuButton>
 
-      <MobileMenu open={menuOpen}>
+      <MobileMenu $open={menuOpen}>
         <MenuLink href="/" onClick={() => setMenuOpen(false)}>Home</MenuLink>
         <MenuLink href="/timeline" onClick={() => setMenuOpen(false)}>Linha do Tempo</MenuLink>
         <MenuLink href="/playlist" onClick={() => setMenuOpen(false)}>Playlist</MenuLink>
