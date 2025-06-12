@@ -84,7 +84,7 @@ export default function TopMenu() {
     return (
       <Menu>
         <DesktopMenu>
-          <a href="/">Home</a>
+          <Link href="/">Home</Link>
           <a href="/timeline">Linha do Tempo</a>
           <a href="/playlist">Playlist</a>
           <a href="/abraquando">Abra Quando...</a>
