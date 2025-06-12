@@ -2,6 +2,14 @@
 import { useEffect, useState, useMemo } from 'react';
 import styled, { keyframes } from 'styled-components';
 
+const SpinnerContainer = styled.div`
+  min-height: 100vh;
+  background-color: var(--color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Container = styled.div`
   min-height: 100vh;
   background-color: var(--color-background);
@@ -21,7 +29,6 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 480px; /* previne layout shift */
 `;
 
 const Photo = styled.img`
@@ -61,7 +68,6 @@ const Spinner = styled.div`
   width: 60px;
   height: 60px;
   animation: ${spin} 1s linear infinite;
-  margin-bottom: 2rem;
 `;
 
 export default function Home() {
@@ -91,25 +97,19 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [startDate]);
 
+  if (!imageLoaded) {
+    return (
+      <SpinnerContainer>
+        <Spinner />
+      </SpinnerContainer>
+    );
+  }
+
   return (
     <Container>
       <ContentWrapper>
-        {!imageLoaded ? (
-          <>
-            <Spinner />
-            <Timer>{time}</Timer>
-          </>
-        ) : (
-          <>
-            <Photo 
-              src="/Us.jpeg" 
-              alt="Foto do casal" 
-              loading="eager"
-              decoding="sync"
-            />
-            <Timer>Te amo há {time}</Timer>
-          </>
-        )}
+        <Photo src="/Us.jpeg" alt="Foto do casal" />
+        <Timer>Te amo há {time}</Timer>
       </ContentWrapper>
     </Container>
   );
