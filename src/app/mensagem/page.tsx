@@ -92,8 +92,9 @@ export default function MensagemFinalPage() {
         </ButtonGroup>
       ) : (
         <Message>
-          Eu sabia! <br />
-          Eu saberei que venci essa!
+          Você assinou o contrato que diz que te amo mais. <br/>
+          Não poderá desdizer!
+          
         </Message>
       )}
     </Container>
